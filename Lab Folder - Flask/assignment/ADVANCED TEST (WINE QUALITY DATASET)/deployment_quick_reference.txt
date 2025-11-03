@@ -1,0 +1,68 @@
+
+QUICK REFERENCE - MODEL DEPLOYMENT
+===================================
+
+MODEL FILE: wine_model_artifacts.joblib
+
+TO LOAD MODEL:
+--------------
+import joblib
+artifacts = joblib.load('wine_model_artifacts.joblib')
+model = artifacts['model']
+scaler = artifacts['scaler']
+features = artifacts['selected_features']
+
+REQUIRED INPUT FEATURES (11):
+  • alcohol_x_flavanoids
+  • color_intensity
+  • phenols_flavanoids_ratio
+  • od280/od315_of_diluted_wines
+  • alcohol_x_proline
+  • proline
+  • flavanoids
+  • phenols_x_flavanoids
+  • phenolic_compounds_sum
+  • alcohol
+  • hue
+
+FEATURE ENGINEERING REQUIRED:
+------------------------------
+Before prediction, create these engineered features from raw input:
+  • alcohol_x_flavanoids
+  • phenols_flavanoids_ratio
+  • alcohol_x_proline
+  • phenols_x_flavanoids
+  • phenolic_compounds_sum
+
+PREDICTION WORKFLOW:
+--------------------
+1. Collect raw wine measurements (13 features)
+2. Engineer additional features (interactions, ratios, etc.)
+3. Select only the 11 required features
+4. Scale features using saved scaler
+5. Predict using model
+6. Map prediction to class name using target_names
+
+OUTPUT CLASSES:
+---------------
+  0: class_0
+  1: class_1
+  2: class_2
+
+EXAMPLE USAGE:
+--------------
+# Load artifacts
+artifacts = joblib.load('wine_model_artifacts.joblib')
+
+# Prepare new sample (must include all original + engineered features)
+# Then select required features
+new_sample = df_new[artifacts['selected_features']]
+
+# Scale
+new_sample_scaled = artifacts['scaler'].transform(new_sample)
+
+# Predict
+prediction = artifacts['model'].predict(new_sample_scaled)
+class_name = artifacts['target_names'][prediction[0]]
+
+print(f"Predicted class: {class_name}")

@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Wine prediction result</title>
+  </head>
+  <body>
+    <h1>Wine prediction result</h1>
+    {% if error %}
+      <p style="color:red">{{ error }}</p>
+    {% else %}
+      <p>Predicted class: <strong>{{ prediction }}</strong></p>
+      <h3>Input features</h3>
+      <ul>
+        {% for k, v in features.items() %}
+          <li>{{ k }}: {{ v }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    <p><a href="/wine">Back</a> | <a href="/">Home</a></p>
+  </body>
+</html>

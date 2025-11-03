@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Wine prediction</title>
+  </head>
+  <body>
+    <h1>Wine classifier (selected features)</h1>
+    <form action="/wine/predict" method="post">
+      {% for f in features %}
+        <label>{{ f }}:</label><br>
+        <input name="{{ f }}" type="number" step="any" required><br>
+      {% endfor %}
+      <button type="submit">Predict</button>
+    </form>
+    <p><a href="/">Back</a></p>
+  </body>
+</html>

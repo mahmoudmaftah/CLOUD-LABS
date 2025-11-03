@@ -1,0 +1,103 @@
+
+WINE CLASSIFICATION MODEL - TRAINING SUMMARY
+============================================
+
+BEST MODEL PERFORMANCE
+----------------------
+Model: Logistic Regression
+Test Accuracy: 1.0000
+Cross-Validation (10-fold): 0.9862 ± 0.0276
+
+DATASET INFORMATION
+-------------------
+Dataset: Wine Classification (sklearn.datasets)
+Total Samples: 178
+Training Samples: 142 (79.8%)
+Test Samples: 36 (20.2%)
+Classes: 3 (class_0, class_1, class_2)
+
+FEATURE ENGINEERING
+-------------------
+Original Features: 13
+Engineered Features Added: 11
+Total Features After Engineering: 24
+Final Selected Features: 11
+
+Selected Features:
+  1. alcohol_x_flavanoids
+  2. color_intensity
+  3. phenols_flavanoids_ratio
+  4. od280/od315_of_diluted_wines
+  5. alcohol_x_proline
+  6. proline
+  7. flavanoids
+  8. phenols_x_flavanoids
+  9. phenolic_compounds_sum
+  10. alcohol
+  11. hue
+
+Feature Engineering Techniques Applied:
+  • Interaction terms (4 features)
+  • Ratio features (3 features)
+  • Aggregate features (2 features)
+  • Categorical binning (2 features)
+
+FEATURE SELECTION PROCESS
+--------------------------
+Methods Used:
+  1. ANOVA F-statistic (SelectKBest)
+  2. Mutual Information
+  3. Random Forest Importance
+  4. Recursive Feature Elimination (RFE)
+
+Selection Strategy: Ensemble voting (features appearing in ≥2 methods)
+
+PREPROCESSING
+-------------
+Missing Values: Handled with median imputation
+Outliers: Managed via RobustScaler
+Scaling Method: StandardScaler
+Train-Test Split: 80-20 stratified split
+
+DIMENSIONALITY REDUCTION
+-------------------------
+PCA Analysis: Performed
+Components for 95% Variance: 6
+Note: Final model uses selected features (not PCA)
+
+MODEL COMPARISON
+----------------
+Total Models Evaluated: 11
+
+Top 5 Models by Accuracy:
+  1. Logistic Regression: 1.0000
+  2. Random Forest: 1.0000
+  3. Gradient Boosting: 1.0000
+  4. Extra Trees: 1.0000
+  5. SVM (RBF): 0.9722
+
+CROSS-VALIDATION RESULTS
+------------------------
+Best Model CV Scores (10-fold):
+  Mean: 0.9862
+  Std Dev: 0.0276
+  Min: 0.9286
+  Max: 1.0000
+
+FINAL MODEL METRICS
+-------------------
+Test Set Performance:
+  Accuracy: 1.0000
+  Precision: 1.0000
+  Recall: 1.0000
+  F1-Score: 1.0000
+
+DEPLOYMENT INFORMATION
+----------------------
+Model saved to: ./wine_model_artifacts.joblib
+Artifacts include: model, scaler, features, statistics, metadata
+Ready for Flask/FastAPI deployment
+
+Training Date: 2025-11-03 22:52:58
+Python Version: 3.10.16
+Scikit-learn Version: 1.4.2
