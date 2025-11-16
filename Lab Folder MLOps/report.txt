@@ -1,0 +1,238 @@
+
+LAB1=============================================
+img1 : training outputs
+img2 : mlflow interface with the new model
+img3: confusion matrix
+
+
+Initial Model Training and Tracking (Credit Card Fraud Dataset)
+Hyperparameter Tuning with MLflow (Credit Card Fraud Dataset)
+Application on a Custom Dataset & Model Registration (Wine Dataset)
+
+
+1.3. Experiment Tracking with MLflow:
+Setup: MLflow was configured to connect to a tracking server running at http://localhost:5000.
+Standardized Evaluation: An evaluate function was created to ensure consistent logging across different model runs. This function calculates and logs:
+Metrics: eval_acc (evaluation accuracy) and auc_score (Area Under the ROC Curve).
+Artifacts: A confusion matrix plot (saved as a PNG) and the trained model itself.
+First Experiment ("scikit_learn_experiment"):
+Logistic Regression: A LogisticRegression model was trained. Its hyperparameters (max_iter, penalty, solver), training accuracy, evaluation metrics, and the model artifact were logged in a single MLflow run.
+Support Vector Classifier (SVC): An SVC model was trained with its own set of hyperparameters (max_iter, C, kernel). These were also logged in a separate run within the same experiment, allowing for direct comparison with the Logistic Regression model in the MLflow UI.
+1.4. Model Retrieval:
+The notebook demonstrated how to load a model previously saved by MLflow using its run_id. The loaded model was then used to make predictions on the test set, confirming its functionality.
+Part 2: Hyperparameter Tuning with MLflow
+This section focused on using MLflow to track a systematic hyperparameter search.
+Objective: To find the optimal class_weight for the LogisticRegression model, which is crucial for handling imbalanced datasets.
+Broad Search Strategy:
+An experiment named "sklearn_creditcard_broad_search" was created.
+A "broad" search was conducted over a list of anomaly_weights ([1, 5, 10, 15]).
+For each weight, a 5-fold cross-validation was performed.
+Crucially, each fold of each cross-validation was logged as a separate MLflow run. This provided a highly detailed and granular view of model performance across different data splits and hyperparameter values.
+Analysis and Guided Search:
+The notebook includes instructions on how to use the MLflow UI to analyze the results of the broad search. By sorting and filtering runs based on the auc_score, the best-performing anomaly_weight range was identified (around 5 and 10).
+The next logical step, described in the notebook, is to perform a "guided search" on a narrower range of weights (e.g., [1, 2, 3, 4, 5]) to fine-tune the hyperparameter.
+Part 3: Application on a Custom Dataset & Model Registration
+This final part demonstrated the flexibility of the established workflow by applying it to a new, different dataset.
+Dataset: The Scikit-learn load_wine dataset was used.
+Experimentation:
+A new experiment named "CustomDataset-Experiment" was created to keep these runs separate.
+Two models, LogisticRegression and XGBoost, were trained and evaluated on the wine dataset.
+Key parameters and performance metrics (accuracy, f1_score) for both models were logged to MLflow for comparison.
+Model Registration:
+After comparing the models, the best-performing model (XGBoost in this case) was registered to the MLflow Model Registry.
+The model was registered under the name "CustomDatasetBestModel", creating Version 1. This step is a key practice in MLOps, as it promotes a versioned, centralized repository for production-ready models, moving beyond simple experiment tracking.
+
+
+
+
+
+LAB2===================================================
+img1: MLFLOW dashboard 
+img2: MLflow experiment section
+img3: Sample predictions
+
+Of course. Here is a detailed report on the second notebook, MLFlow with TensorFlow 2.0 (Keras).ipynb. This summary highlights the key steps, explains the purpose of the commands (including the terminal command), and is structured for easy integration into your final report.
+Summary Report on MLflow and TensorFlow 2.0 (Keras) Experimentation
+This report details the work conducted in the notebook MLFlow with TensorFlow 2.0 (Keras).ipynb. The primary goal was to demonstrate the integration of MLflow with a deep learning framework, specifically TensorFlow 2.0 (using the Keras API), to automatically track and manage a machine learning experiment.
+The workflow can be summarized in the following key stages:
+Data Preparation for a Convolutional Neural Network (CNN).
+CNN Model Definition and Compilation using Keras.
+Automated Experiment Tracking with MLflow autolog().
+Analysis of Results using the MLflow UI.
+Model Loading and Verification from an MLflow run.
+1. Data Preparation (MNIST Dataset)
+The experiment used the well-known MNIST dataset of handwritten digits, which is ideal for image classification tasks.
+Loading Data: The dataset was loaded directly using tensorflow.keras.datasets.mnist.load_data(), which conveniently provides pre-split training and testing sets (x_train, y_train, x_test, y_test).
+Data Preprocessing for CNN: Two critical preprocessing steps were performed to make the data suitable for a Keras Conv2D model:
+Reshaping the Input Data: The original image data had a shape of (samples, 28, 28). Keras convolutional layers require a 4D input tensor in the format (samples, height, width, channels). The data was reshaped to (samples, 28, 28, 1), adding a channel dimension of 1 to represent the grayscale nature of the images.
+One-Hot Encoding Labels: The target labels were integers from 0 to 9. These were converted into one-hot encoded vectors using tf.keras.utils.to_categorical. For example, the label 5 was transformed into the vector [0, 0, 0, 0, 0, 1, 0, 0, 0, 0]. This format is required when using the categorical_crossentropy loss function for multi-class classification.
+A quick visualization of a sample image and its corresponding label was performed to confirm the data was loaded correctly.
+2. CNN Model Definition and Compilation
+A simple Convolutional Neural Network (CNN) was defined using the tf.keras.Sequential API.
+Model Architecture: The network consisted of the following layers:
+Two Conv2D layers with relu activation for hierarchical feature extraction from the images.
+A Flatten layer to convert the 2D feature maps into a 1D vector.
+Two Dense (fully connected) layers with relu activation for further processing.
+A final Dense output layer with 10 neurons and a softmax activation function, which outputs a probability distribution over the 10 possible digit classes (0-9).
+Model Compilation: The model was compiled with:
+Optimizer: Adam
+Loss Function: categorical_crossentropy (standard for multi-class classification with one-hot encoded labels).
+Metrics: accuracy was specified as the performance metric to monitor during training.
+3. Automated Experiment Tracking with MLflow autolog()
+This was the core part of the demonstration, showcasing MLflow's powerful automated logging capabilities for TensorFlow/Keras.
+Experiment Setup: A new MLflow experiment was created and set with the name "TF_Keras_MNIST".
+Autologging: Instead of manually logging each parameter and metric (as was done in the Scikit-learn notebook), the mlflow.tensorflow.autolog() function was called.
+Automated Tracking: This single line of code instructs MLflow to automatically track the following during the model.fit() call:
+Parameters: Key training parameters such as the optimizer name, learning rate, number of epochs, and batch size.
+Metrics: All metrics specified in model.compile() (loss and accuracy) for each epoch of training.
+Artifacts: The trained Keras model, a summary of the model architecture, and logs for visualization with TensorBoard.
+Evaluation: After training, evaluation accuracy and the AUC score were calculated on the test set and also logged to the MLflow run.
+4. Interacting with the MLflow UI (Terminal Command)
+The notebook provides instructions on how to visualize the results of the tracked experiment using the MLflow UI.
+Terminal Command: To launch the UI, the following command was executed in the terminal from the notebook's directory:
+code
+Bash
+mlflow ui -p 1234
+Purpose of the Command:
+mlflow ui starts a local web server that provides a graphical user interface for exploring and comparing MLflow runs.
+The -p 1234 flag specifies that the UI should be accessible on port 1234. If this flag is omitted, MLflow defaults to port 5000.
+Analysis in the UI: By navigating to http://localhost:1234 in a web browser, one can see the "TF_Keras_MNIST" experiment. Clicking into the run reveals all the automatically logged information, including graphs of the loss and accuracy metrics over the training epochs and the saved model artifacts.
+5. Model Loading and Verification
+The final step demonstrated how to retrieve a trained model from an MLflow run and use it for inference.
+Loading the Model: The mlflow.tensorflow.load_model() function was used, passing the unique run_id of the experiment to load the corresponding model artifact.
+Verification: The loaded model was then evaluated on the test set. The resulting evaluation metrics (loss, accuracy, and AUC) were printed and confirmed to match the metrics from the original run, validating that the model was saved and loaded successfully and is ready for use.
+
+
+LAB3================================================
+I first had errors due to misconfigured hadoop on windows, but solved it from : "https://github.com/cdarlint/winutils"
+
+Then spark setup problems that were solved with 
+import os
+from pyspark.sql import SparkSession
+
+spark = SparkSession.builder \
+    .master("local[*]") \
+    .config("spark.driver.memory", "4g") \
+    .appName("MLflowCreditCardLab") \
+    .getOrCreate()
+
+print("SparkSession created with 4g of driver memory.")
+spark.sparkContext._conf.getAll()
+
+
+For this lab we had to explicitly specify the dataset schema for compatibility issues : # Define the schema for the credit card dataset
+schema = StructType([
+    StructField("Time", DoubleType(), True),
+    # Add all the 'V' columns
+    *[StructField(f"V{i}", DoubleType(), True) for i in range(1, 29)],
+    StructField("Amount", DoubleType(), True),
+    StructField("Class", IntegerType(), True)
+])
+
+Training Accuracy:  0.9988972229272605
+Training AUC: 0.9856905727348666
+Evaluation Accuracy:  0.9986218594296619
+Evaluation AUC:  0.963336407649082
+
+
+AUC Score: 83.515%
+Accuracy Score: 99.862%
+
+img1: mlflow dashboard
+img2: pyspark with mlflow model
+img3: confusion matrix
+
+
+Environment Setup: A local PySpark session was configured and initialized to handle data processing and model training.
+Data Preparation: The creditcard.csv dataset was loaded into a Spark DataFrame. Preprocessing steps included:
+Selecting features and defining the target variable (Class).
+Using VectorAssembler to combine features into a single vector required by Spark ML.
+Addressing the dataset's class imbalance by undersampling the majority (non-fraudulent) class.
+Splitting the data into training and testing sets.
+Model Training & MLflow Tracking:
+A Logistic Regression model was trained on the prepared data.
+An MLflow experiment was initiated to log the run. Key metrics such as training/evaluation Accuracy and Area Under ROC (AUC) were automatically logged.
+The trained PySpark model was saved as an artifact to the MLflow run using mlflow.spark.log_model.
+Model Evaluation & Validation:
+The model was loaded back from the MLflow run to demonstrate its reusability.
+Predictions were made on the test set, and the model's performance was evaluated.
+Results:
+The trained model achieved strong performance on the test data:
+Accuracy Score: 99.862%
+AUC Score: 83.515%
+The experiment, including its parameters, metrics, and the serialized model, was successfully captured in MLflow, ensuring traceability and simplifying future deployment. A confusion matrix was also generated to visualize the model's prediction accuracy on true vs. predicted classes.
+
+LAB4==================================================
+for lab4 i used a custom generated data set to try to find solutions for imbalanced datasets
+
+2025/11/16 21:32:12 INFO mlflow.tracking.fluent: Experiment with name 'custom_fraud_detection_experiment' does not exist. Creating a new experiment.
+Training model with MLflow...
+2025/11/16 21:32:12 WARNING mlflow.models.model: `artifact_path` is deprecated. Please use `name` instead.
+2025/11/16 21:32:20 WARNING mlflow.models.model: Model logged without a signature and input example. Please set `input_example` parameter when logging the model to auto infer the model signature.
+
+✅ Model training complete!
+   Run ID: d3f2bd42454040458255dbe95861e34c
+   Train Accuracy: 0.7372
+   Test Accuracy: 0.7144
+   Train AUC: 0.7971
+   Test AUC: 0.7982
+
+📝 Save this Run ID for model serving: d3f2bd42454040458255dbe95861e34c
+Successfully registered model 'fraud_detection_lr'.
+Created version '1' of model 'fraud_detection_lr'.
+
+
+To serve model locally run : mlflow models serve --model-uri runs:/6e3daba3bd164896aac6477900deaed8/log_reg_model -p 1236 --env-manager=local
+
+Mention in your report that you used --env-manager=local for Windows compatibility
+
+Queried the model in 2 ways
++ Querying model using requests library...
+
+✅ Successfully received predictions
+   Number of predictions: 80
+
+First 10 predictions: [0, 1, 0, 0, 0, 0, 0, 0, 1, 1]
+
+Predictions shape: (1, 80)
+
+================================================================================
+EVALUATION RESULTS
+================================================================================
+Evaluation Accuracy: 0.725000 (72.50%)
+Evaluation AUC:      0.720953
+================================================================================
+
+Detailed Classification Report:
+================================================================================
+              precision    recall  f1-score   support
+
+      Normal       0.98      0.73      0.84      7686
+       Fraud       0.10      0.72      0.17       314
+
+    accuracy                           0.72      8000
+   macro avg       0.54      0.72      0.50      8000
+weighted avg       0.95      0.72      0.81      8000
+
+================================================================================
+
+Screens:
+1. MLflow UI showing experiment runs
+2. MLflow UI showing logged parameters and metrics
+3. Terminal showing model server running
+4. Prediction outputs (subprocess method)
+5. Prediction outputs (requests method)
+6. Evaluation metrics
+7. Confusion matrix visualization
+
+
+
+some of the commands that were ran : 
+mlflow ui -p 1234
+mlflow models serve --model-uri runs:/6e3daba3bd164896aac6477900deaed8/log_reg_model -p 1236 --env-manager=local
+
+
+
+
+LAB5=================================
+
