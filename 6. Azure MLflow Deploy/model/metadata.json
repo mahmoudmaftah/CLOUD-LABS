@@ -1,0 +1,24 @@
+{
+  "model_name": "Ridge Regression",
+  "test_r2": 0.46184914529395593,
+  "test_rmse": 53.39667491357988,
+  "test_mae": 42.582972154324125,
+  "cv_score": 0.4458312883554503,
+  "n_features": 14,
+  "feature_names": [
+    "age",
+    "sex",
+    "bmi",
+    "bp",
+    "s1",
+    "s2",
+    "s3",
+    "s4",
+    "s5",
+    "s6",
+    "bmi_squared",
+    "s5_squared",
+    "bp_squared",
+    "interaction_1"
+  ]
+}
