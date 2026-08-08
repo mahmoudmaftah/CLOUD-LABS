@@ -1,3 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.pytest_cache/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# MLflow / MLOps
 Lab Folder MLOps/data/
 Lab Folder MLOps/mlartifacts/
-Lab Folder MLOps/mlruns
+Lab Folder MLOps/mlruns/
+mlruns/
+mlartifacts/
+
+# Configuration Azure (identifie un abonnement - ne pas publier)
+config.json
+!config.json.example
+
+# Systeme et editeurs
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
